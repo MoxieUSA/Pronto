@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<title>MVP Standalone</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<script type="text/javascript" src="js/swfobject.js"></script>
+		<script type="text/javascript">
+			var params = {
+				quality: "high",
+				scale: "noscale",
+				wmode: "opaque",
+				allowscriptaccess: "samedomain",
+				allowfullscreen: "true",
+				bgcolor: "#000000"
+			};
+			
+			var flashvars = {
+				configXML:"./xml/mvp_config.xml"
+			};
+			
+			var attributes = {
+				id: "flashcontent",
+				name: "flashcontent"
+			};
+			
+			var mvp;
+            swfobject.embedSWF("swf/mvp_standalone.swf", "flashcontent", "960", "540", "10.0.0", "swf/expressInstall.swf", flashvars, params, attributes, handler_swfobject_callback);
+            function handler_swfobject_callback(evt){
+				mvp = evt.ref;
+            }
+            
+            var outputBox;
+            function jsMVPEvent(evt){
+				if (!mvp){
+					return
+				}
+				switch (evt.type){
+					case "ready":
+						mvp.trackPercentWatched(10); //Every 10%
+						setSource(0);
+						//mvp.addASCuePoint("1%", "one_percent");
+						//mvp.addASCuePoint(10, "ten_seconds");
+						break;
+					case "tracking":
+						switch (evt.data.type){
+							case "cue_point":
+								var cuePoint = evt.data.data;
+								if (outputBox){
+									outputBox.innerHTML = cuePoint.name + " | " + cuePoint.time + " seconds | " + cuePoint.percent + "% | #" + cuePoint.interval + "\n" + outputBox.innerHTML;
+								}
+								break;
+							default: //All other tracking
+								if (outputBox){
+									outputBox.innerHTML = evt.data.type + "\n" + outputBox.innerHTML;
+								}
+						}
+						break;
+				}
+            }
+            
+            var sources = ["../videos/Pirates_AppDemo_755x472.f4v", /* Local */
+							"rtmp://loreal.fcod.llnwd.net/a1685/o15/garnier_usa/loreal-fc-garnier_usa_fructis/AntiDandruff/898x512/monkeyFull.flv", /* Streaming */
+							"http://products.verizonwireless.com/flash/featured_shows/shows/flm_esp/videos/Video_01.flv" /* Progressive */];
+            function setSource(index){
+				if (mvp){
+					mvp.setSource(sources[index]);
+				}
+            }
+            function setScaleMode(mode){
+				if (mvp){
+					mvp.setScaleMode(mode);
+				}
+            }
+            function play(){
+				if (mvp){
+					mvp.play();
+				}
+            }
+            function pause(){
+				if (mvp){
+					mvp.pause();
+				}
+            }
+            function resume(){
+				if (mvp){
+					mvp.resume();
+				}
+            }
+            function stop(){
+				if (mvp){
+					mvp.stop();
+				}
+            }
+            function mute(){
+				if (mvp){
+					mvp.mute();
+				}
+            }
+            function unmute(){
+				if (mvp){
+					mvp.unmute();
+				}
+            }
+            function setVolume(volume){
+				if (mvp){
+					mvp.setVolume(volume);
+				}
+            }
+            function seekTo(scale){
+				if (mvp){
+					mvp.seekTo(scale);
+				}
+            }
+		</script>
+		<style type="text/css">
+			* {
+				padding:0;
+				border:0;
+				margin:0;
+			}
+			
+			body {
+				background-color: #E5E5E5;
+			}
+			
+			#controls {
+				margin:32px;
+				float:left;
+			}
+			
+			.controlList {
+				padding-left:16px;
+			}
+			
+			#flashcontainer {
+				width:960px;
+				position:absolute;
+				left:50%;
+				margin-left:-480px;
+				float:left;
+			}
+			
+			#output {
+				margin:32px;
+				float:right;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="controls">
+			<h3>Set Source:</h3>
+			<ul class="controlList">
+				<li><a href="#" onClick="setSource(0); return false;">Local</a></li>
+				<li><a href="#" onClick="setSource(1); return false;">Streaming</a></li>
+				<li><a href="#" onClick="setSource(2); return false;">Progressive</a></li>
+			</ul>
+			<br/>
+			<h3>Set Scale Mode:</h3>
+			<ul class="controlList">
+				<li><a href="#" onClick="setScaleMode('noScale'); return false;">noScale</a></li>
+				<li><a href="#" onClick="setScaleMode('exactFit'); return false;">exactFit</a></li>
+				<li><a href="#" onClick="setScaleMode('maintainAspectRatio'); return false;">maintainAspectRatio</a></li>
+			</ul>
+			<br/>
+			<h3>Controls:</h3>
+			<ul class="controlList">
+				<li><a href="#" onClick="play(); return false;">play</a></li>
+				<li><a href="#" onClick="pause(); return false;">pause</a></li>
+				<li><a href="#" onClick="resume(); return false;">resume</a></li>
+				<li><a href="#" onClick="stop(); return false;">stop</a></li>
+				<li><a href="#" onClick="mute(); return false;">mute</a></li>
+				<li><a href="#" onClick="unmute(); return false;">unmute</a></li>
+				<li><a href="#" onClick="setVolume(0.5); return false;">setVolume 0.5</a></li>
+				<li><a href="#" onClick="seekTo(0.5); return false;">seekTo 0.5</a></li>
+			</ul>
+		</div>
+		<div id="flashcontainer">	
+            <div id="flashcontent">
+			</div>
+        </div>
+        <div id="output">
+			<h3>OUTPUT:</h3>
+			<br/>
+			<textarea id="outputBox" cols="30" rows="30"></textarea>
+        </div>
+        <script type="text/javascript">
+			outputBox = document.getElementById("outputBox");
+        </script>
+	</body>
+</html>
