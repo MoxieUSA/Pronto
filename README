@@ -1,2 +1,20 @@
+Pronto
+By: AJ Savino
+
 Pronto is an ActionScript 3 framework that simplifies common Flash needs such as service requests, view management, audio management, along with other utilities.
 It can be used for whipping up just about any Flash project. it handles ui architecture, some common math needs such as vectors, printing, object utils, tokenizer, view management, audio management, service requests, aspect ratio, and fitting any size content into any size view.
+
+Pronto is a framework designed to provide a set of common classes that can be used as a foundation for any project
+Framework provides classes for:
+• Moxie Video Player
+• UIComponent Architecture
+• Paginated Item Grids
+• View Management
+• Server Requests
+• Audio Management
+• Vector Math
+• Normalized Timer
+• Printing
+• Object Utilities
+• Tokenizer
+• Video Utilities
