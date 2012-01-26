@@ -18,3 +18,6 @@ Pronto provides classes for:
 * Tokenizer
 * Video Utilities
 * Object Utilities
+
+Documentation:
+http://moxieinteractive.github.com/Pronto/
