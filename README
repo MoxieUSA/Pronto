@@ -1,2 +1,0 @@
-Pronto is an ActionScript 3 framework that simplifies common Flash needs such as service requests, view management, audio management, along with other utilities.
-It can be used for whipping up just about any Flash project. it handles ui architecture, some common math needs such as vectors, printing, object utils, tokenizer, view management, audio management, service requests, aspect ratio, and fitting any size content into any size view.

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MoxieVideoPlayerConfig>
+	<!-- JavaScript function called from Flash -->
+	<jsEventHandler>jsMVPEvent</jsEventHandler>
+	
+	<!-- The following tags are OPTIONAL and will fallback to default values if not specified -->
+	<!-- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -->
+	<controlBarLocation>onTop</controlBarLocation>	<!-- Control bar location relative to player ("onTop", "below") -->
+	<autoSpaceControls>true</autoSpaceControls>		<!-- Determines whether the controls should be automatically spaced out evenly -->
+	<autoHideControls>true</autoHideControls>		<!-- Determines whether the control bar should hide after a period of inactivity ("true", "false") -->
+	<controlsHideTime>2</controlsHideTime>			<!-- The amount of time of inactivity before hiding the control bar (Number in seconds) -->
+	<autoPlay>true</autoPlay>						<!-- Determines whether the video should play automatically after setting the source ("true", "false") -->
+	<autoClear>true</autoClear>						<!-- Determines whether the video should clear upon completion ("true", "false") -->
+	<bufferTime>3</bufferTime>						<!-- The amount of time to buffer (Number in seconds) -->
+	<scaleMode>exactFit</scaleMode>					<!-- The scale mode of the video player ("noScale", "exactFit", "maintainAspectRatio") -->
+	<!-- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -->
+	
+	<!-- All Controls are OPTIONAL -->
+	<!-- Specify controls in order from left to right along the control bar -->
+	<!-- The tag name is the class name of the control (or MovieClip) -->
+	<!-- Any attributes on a control tag will be applied as properties to the class instance -->
+	<!-- Any position attributes (x, y) will only take effect IF autoSpaceControls is false -->
+	<!-- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -->
+	<controls>
+		<!--<MVPLogo imageURL="./images/vcast_logo.png" url="http://verizonwireless.com" scope="_blank"/>--> <!-- Set the 'imageURL' to load, 'url' to click through to, and the 'scope' to open the url in -->
+		<MVPRewindControl/>
+		<MVPVideoToggle/>
+		<MVPSeekBar width="100"/> <!-- When setting the width attribute it affects the width when the video player is at its original size -->
+		<MVPTimeIndicator/>
+		<!-- <MVPAudioToggle/> -->
+		<!-- <MVPHVolumeSlider/> -->
+		<!-- <MVPVVolumeSlider/> DOES NOT POSITION WELL AT THIS TIME -->
+		<!-- <MVPHVolumeControl/> DOES NOT POSITION WELL AT THIS TIME -->
+		<MVPVVolumeControl/>
+		<MVPFullscreenToggle/>
+		<MVPFacebookIcon/>
+		<MVPTwitterIcon/>
+	</controls>
+	<!-- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-->
+</MoxieVideoPlayerConfig>

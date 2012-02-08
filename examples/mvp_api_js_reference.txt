@@ -1,0 +1,96 @@
+Moxie Video Player API Reference
+
+METHODS
+_______
+getSource():String;								//returns the source url of the current video
+setSource(url:String);							//sets the source url of the current video. note that this will clear all cue points and rebuild percent watched cue points added by the trackPercentWatched method
+getScaleMode():String;							//'noScale', 'exactFit', 'maintainAspectRatio'
+setScaleMode(scaleMode:String);					//'noScale', 'exactFit', 'maintainAspectRatio'
+play();											//plays the video or resumes if paused
+pause();										//pauses the video
+resume();										//resumes the video
+stop();											//stops the video
+mute();											//mutes the audio
+unmute();										//unmutes the audio
+getVolume():Number;								//returns a value for the volume from 0-1
+setVolume(volume:Number);						//accepts a value for the volume from 0-1
+seekTo(scale:Number);							//seeks to a value from 0-1
+trackPercentWatched(every:Number);				//allows you to track the percent watched. if you want to track every 10% pass the number "10" and likewise if you want to track every 25%. only needs to be called once and the cue points will automatically be rebuilt to the proper times each time the source is changed. pass 0 to clear
+addASCuePoint(time:*, name:String);				//manually add a cue point. the time can be a number in seconds such as "10", or a percent such as "50%". only call this AFTER setting the video source as cue points get cleared upon setting the source
+removeASCuePoint(identifier:*);					//removes a cue point. cue points can be identified by a name, time in seconds, or time as a percent
+clearASCuePoints();								//clears all cue points. note that if the video source changes the percent watched cue points added by the trackPercentWatched method will be rebuilt
+getAutoHideControls():Boolean;					//determines if the controls should hide after a period of inactivity
+setAutoHideControls(autoHide:Boolean);			//determines if the controls should hide after a period of inactivity
+getControlsHideTime():Number;					//the amount of time in seconds of inactivity before the controls hide
+setControlsHideTime(seconds:Number);			//the amount of time in seconds of inactivity before the controls hide
+getControlBarLocation():String;					//'onTop', 'below'
+getAutoSpaceControls():Boolean;					//determines if the controls should be automatically evenly spaced along the control bar
+setAutoSpaceControls(autoSpace:Boolean);		//determines if the controls should be automatically evenly spaced along the control bar
+getAutoPlay():Boolean;							//determines if the video should auto play upon setting the source
+setAutoPlay(autoPlay:Boolean);					//determines if the video should auto play upon setting the source
+getAutoClear():Boolean;							//determines if the video should clear upon completion
+setAutoClear(autoPlay:Boolean);					//determines if the video should clear upon completion
+getBufferTime():Number;							//the amount of time in seconds to buffer
+setBufferTime(seconds:Number);					//the amount of time in seconds to buffer
+getCurrentTime():Number;						//the current time of the playhead
+getTotalTime():Number;							//the total time of the video
+getIsPlayingBack():Boolean;						//indicates if the video is playing (although this may be true it could be paused)
+getIsPaused():Boolean;							//indicates if the video is paused (the video can only be paused if it is also playing)
+getIsSeeking():Boolean;							//indicates if the video is seeking
+getIsMuted():Boolean;							//indicates if the audio is muted
+getIsFullscreen():Boolean;						//indicates if the player is in fullscreen mode
+getMetaData():Object;							//returns the metadata object once retreived after changing the source
+
+EVENTS
+______
+//Events come through the function defined in the config.xml file
+//mvp is a reference to the video player embed
+function jsMVPEvent(evt){
+	if (!mvp){
+		return
+	}
+	switch (evt.type){
+		case "ready":
+			mvp.setSource(url);
+			break;
+		case "tracking":
+			switch (evt.data.type){
+				//The followiing events fire with or without user interaction
+				case "cue_point":				//fires when a cue point is hit. (access the data property "evt.data.data" to get the cue point information which has the following properties 'name', 'time', 'percent', 'interval'. interval property only exists on percent watched cue points)
+				case "source":					//fires when source changes
+				case "size_scale":				//fires when size or scale mode changes
+				case "play":					//fires whenever the video plays (includes playing after pausing)
+				case "pause":					//fires when the video is paused
+				case "resume":					//fires when the video resumes
+				case "stop":					//fires when the video stops
+				case "start_buffering":			//fires when buffering begins
+				case "stop_buffering":			//fires when buffering finishes
+				case "rewind":					//fires when the video rewinds
+				case "mute":					//fires upon muting
+				case "unmute":					//fires upon unmuting
+				case "volume":					//fires upon the volume changing (access the data property "evt.data.data" to get the volume from 0-1)
+				case "seek":					//fires upon seeking (access the data property "evt.data.data" to get the seek position from 0-1)
+				case "enter_fullscreen":		//fires upon entering fullscreen
+				case "exit_fullscreen":			//fires upon exiting fullscreen
+				case "complete":				//fires upon playback completion
+				
+				//The following events only fire upon user interaction
+				case "click_logo":				//fires when the user clicks the logo
+				case "click_rewind":			//fires when the user clicks rewind
+				case "click_play":				//fires when the user clicks play
+				case "click_pause":				//fires when the user clicks pause
+				case "click_seek":				//fires when the user seeks
+				case "click_mute":				//fires when the user clicks mute
+				case "click_unmute":			//fires when the user clicks unmute
+				case "click_volume":			//fires when the user changes the volume
+				case "click_enter_fullscreen":	//fires when the user enters fullscreen mode by clicking the fullscreen button or double clicking the video
+				case "click_exit_fullscreen":	//fires when the user exits fullscreen mode by clicking the fullscreen button, double clicking the video, or hitting escape
+				case "click_twitter_icon":		//fires when the user clicks the twitter icon
+				case "click_facebook_icon":		//fires when the user clicks the facebook icon
+				
+				default:
+					//alert (evt.data.type);
+			}
+			break;
+	}
+}
