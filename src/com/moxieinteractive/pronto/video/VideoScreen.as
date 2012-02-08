@@ -45,6 +45,7 @@ package com.moxieinteractive.pronto.video {
 		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		
 		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		public var container:MovieClip;
 		public var bg:MovieClip;
 		public var buffering:MovieClip;
 		
@@ -199,6 +200,13 @@ package com.moxieinteractive.pronto.video {
 		override public function init():void {
 			super.init();
 			
+			if (!container){
+				container = new MovieClip();
+				addChild(container);
+			}
+			bg = container.bg;
+			buffering = container.buffering;
+			
 			_lastWidth = super.width;
 			_lastHeight = super.height;
 			_width = _lastWidth;
@@ -220,7 +228,7 @@ package com.moxieinteractive.pronto.video {
 			_connection.client = this;
 			
 			_video = new Video();
-			addChildAt(_video, numChildren);
+			container.addChildAt(_video, container.numChildren);
 			
 			_isBuffering = false;
 			if (buffering){
@@ -251,7 +259,7 @@ package com.moxieinteractive.pronto.video {
 				_stream.removeEventListener(NetStatusEvent.NET_STATUS, handler_netStatus);
 				_stream = null;
 			}
-			removeChild(_video);
+			container.removeChild(_video);
 			_video.clear();
 			_video = null;
 			
@@ -336,8 +344,8 @@ package com.moxieinteractive.pronto.video {
 		protected function doSizeScale():void {
 			var maintainAspectRatio:Boolean;
 			if (!_isFullscreen){
-				x = 0;
-				y = 0;
+				container.x = 0;
+				container.y = 0;
 				switch (_scaleMode){
 					case VideoScaleMode.NO_SCALE:
 						if (_metaData){
@@ -357,8 +365,8 @@ package com.moxieinteractive.pronto.video {
 				}
 			} else {
 				var position:Point = localToGlobal(new Point());
-				x = -x - position.x;
-				y = -y - position.y;
+				container.x = -x - position.x;
+				container.y = -y - position.y;
 				maintainAspectRatio = true;
 			}
 			if (maintainAspectRatio){
