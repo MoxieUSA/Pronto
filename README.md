@@ -12,6 +12,7 @@ Pronto provides classes for:
 * View Management
 * Audio Management
 * Service Requests
+* Endless Scroller
 * Vector Math
 * Normalized Timer
 * Printing
