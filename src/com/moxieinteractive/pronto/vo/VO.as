@@ -2,11 +2,11 @@
 * AJ Savino
 */
 package com.moxieinteractive.pronto.vo {
-	//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-	import com.moxieinteractive.pronto.utils.ObjectTracer;
-	//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+	//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+	import com.moxieinteractive.pronto.utils.ObjTracer;
+	//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 	
-	public class VO extends ObjectTracer {
+	public class VO extends ObjTracer {
 		//-=-=-=-=-=-=-=-=-=
 		public var data:*;
 		//-=-=-=-=-=-=-=-=-=
