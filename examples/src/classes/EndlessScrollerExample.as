@@ -106,7 +106,7 @@ package {
 		
 		//Updates the light status indication
 		protected function handler_scroller_beginSelect(evt:EndlessScrollerEvent = null):void {
-			var index:int = _scroller.selectedData - 1; //This will get the data property of the selected renderer, in our case the frame number of the renderer
+			var index:int = _scroller.selectedIndex;
 			var lightsLength:uint = _lights.length;
 			for (var i:uint = 0; i < lightsLength; i++){
 				if (i == index){

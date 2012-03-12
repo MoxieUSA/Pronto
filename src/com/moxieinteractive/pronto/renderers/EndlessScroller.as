@@ -87,7 +87,7 @@ package com.moxieinteractive.pronto.renderers {
 		}
 		
 		public function get selectedIndex():int {
-			return _selectedIndex;
+			return resolveIndex(_selectedIndex);
 		}
 		public function set selectedIndex(value:int):void {
 			selectIndex(value);
