@@ -31,15 +31,13 @@ package com.moxieinteractive.pronto.renderers {
 		protected var _hSpacing:Number = 16;					//Will cause a re-render
 		protected var _endsCount:uint = 1;						//Will cause a re-render
 		
-		protected var _lastIndex:int;
 		protected var _selectedIndex:int;
 		
 		protected var _container:MovieClip;
 		protected var _renderers:Array;
-		protected var _isTweening:Boolean;
 		protected var _isCycling:Boolean;
+		protected var _cycleToIndex:int;
 		protected var _cycleDirection:int;
-		protected var _beginCycleIndex:int;
 		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		
 		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -82,12 +80,8 @@ package com.moxieinteractive.pronto.renderers {
 			invalidateProperty(PROP_RENDER);
 		}
 		
-		public function get lastIndex():int {
-			return _lastIndex;
-		}
-		
 		public function get selectedIndex():int {
-			return resolveIndex(_selectedIndex);
+			return _selectedIndex;
 		}
 		public function set selectedIndex(value:int):void {
 			selectIndex(value);
@@ -101,7 +95,7 @@ package com.moxieinteractive.pronto.renderers {
 			if (!_data is Array){
 				return null;
 			}
-			return _data[resolveIndex(_selectedIndex)];
+			return _data[_selectedIndex];
 		}
 		
 		public function get selectedRenderers():Array {
@@ -179,42 +173,32 @@ package com.moxieinteractive.pronto.renderers {
 			if (!(_data is Array)){
 				return;
 			}
-			if (_isTweening){
-				return;
-			}
-			index = Math.max(Math.min(index, _data.length), -1);
+			index = Math.max(Math.min(index, (_data.length - 1) + _endsCount), -_endsCount);
 			
 			var offset:Number = index - _selectedIndex;
 			var direction:int = offset / Math.abs(offset);
 			if (!direction){
 				return;
 			}
-			_isTweening = true;
-			_lastIndex = _selectedIndex;
-			_selectedIndex = index;
+			_container.x = -getXOffset(_selectedIndex); //Always set the proper position when starting
+			_selectedIndex = resolveIndex(index);
 			
 			dispatchEvent(new EndlessScrollerEvent(EndlessScrollerEvent.BEGIN_SELECT));
-			TweenLite.to(_container, timing, {x:-getXOffset(index), onComplete:handler_selectIndex_complete, ease:easing});
+			TweenLite.killTweensOf(_container);
+			TweenLite.to(_container, timing, {x:-getXOffset(index), ease:easing, onComplete:handler_selectIndex_complete});
 		}
 		
 		protected function handler_selectIndex_complete():void {
-			_isTweening = false;
-			
-			_lastIndex = resolveIndex(_lastIndex);
-			_selectedIndex = resolveIndex(_selectedIndex);
-			_container.x = -getXOffset(_selectedIndex);
+			_container.x = -getXOffset(_selectedIndex); //If it completes set the proper position
 			
 			dispatchEvent(new EndlessScrollerEvent(EndlessScrollerEvent.END_SELECT, selectedRenderers));
+			
 			if (_isCycling){
-				if (_selectedIndex == _beginCycleIndex){
+				if (_selectedIndex == _cycleToIndex){
 					_isCycling = false;
 					dispatchEvent(new EndlessScrollerEvent(EndlessScrollerEvent.CYCLE_COMPLETE, selectedRenderers));
 				} else {
-					if (_cycleDirection == -1){
-						selectPrev();
-					} else if (_cycleDirection == 1){
-						selectNext();
-					}
+					doCycleStep();
 				}
 			}
 		}
@@ -247,30 +231,44 @@ package com.moxieinteractive.pronto.renderers {
 			return index * (_itemWidth + _hSpacing);
 		}
 		
-		public function cyclePrev():void {
+		public function cycleTo(index:int, direction:int = 0):void {
 			if (_isCycling){
 				return;
 			}
-			_isCycling = true;
-			_cycleDirection = -1;
-			_beginCycleIndex = resolveIndex(_selectedIndex);
-			
-			selectPrev();
-		}
-		
-		public function cycleNext():void {
-			if (_isCycling){
-				return;
+			index = Math.max(Math.min(index, (_data.length - 1) + _endsCount), -_endsCount);
+			if (!direction){
+				var offset:Number = index - _selectedIndex;
+				direction = offset / Math.abs(offset);
+				if (!direction){
+					return;
+				}
 			}
 			_isCycling = true;
-			_cycleDirection = 1;
-			_beginCycleIndex = resolveIndex(_selectedIndex);
+			_cycleToIndex = resolveIndex(index);
+			_cycleDirection = direction;
 			
-			selectNext();
+			doCycleStep();
 		}
 		
-		protected function resolveIndex(index:int):uint {
-			return Calc.coterminal(index, _data.length);
+		protected function doCycleStep():void {
+			if (_cycleDirection == 1){
+				selectNext();
+			} else if (_cycleDirection == -1){
+				selectPrev();
+			}
+		}
+		
+		public function resolveIndex(index:*):* {
+			if (index is int){
+				return Calc.coterminal(index, _data.length);
+			} else if (index is IRenderer){
+				index = _renderers.indexOf(index);
+				if (index != -1){
+					return index - _endsCount;
+				}
+			}
+			
+			return null;
 		}
 	}
 }
