@@ -34,7 +34,7 @@ package com.moxieinteractive.pronto.geom {
 		}
 		
 		public static function coterminal(angle:Number, max:Number = 360):Number {
-			return (angle >= 0) ? angle % max : angle % max + max;
+			return ((angle %= max) >= 0) ? angle : angle + max;
 		}
 		
 		public static function halfAngle(angle:Number):Number {
