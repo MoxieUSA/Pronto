@@ -183,7 +183,7 @@ package com.moxieinteractive.pronto.renderers {
 			_container.x = -getXOffset(_selectedIndex); //Always set the proper position when starting
 			_selectedIndex = resolveIndex(index);
 			
-			dispatchEvent(new EndlessScrollerEvent(EndlessScrollerEvent.BEGIN_SELECT));
+			dispatchEvent(new EndlessScrollerEvent(EndlessScrollerEvent.BEGIN_SELECT, selectedData));
 			TweenLite.killTweensOf(_container);
 			TweenLite.to(_container, timing, {x:-getXOffset(index), ease:easing, onComplete:handler_selectIndex_complete});
 		}
@@ -191,12 +191,12 @@ package com.moxieinteractive.pronto.renderers {
 		protected function handler_selectIndex_complete():void {
 			_container.x = -getXOffset(_selectedIndex); //If it completes set the proper position
 			
-			dispatchEvent(new EndlessScrollerEvent(EndlessScrollerEvent.END_SELECT, selectedRenderers));
+			dispatchEvent(new EndlessScrollerEvent(EndlessScrollerEvent.END_SELECT, selectedData));
 			
 			if (_isCycling){
 				if (_selectedIndex == _cycleToIndex){
 					_isCycling = false;
-					dispatchEvent(new EndlessScrollerEvent(EndlessScrollerEvent.CYCLE_COMPLETE, selectedRenderers));
+					dispatchEvent(new EndlessScrollerEvent(EndlessScrollerEvent.CYCLE_COMPLETE, selectedData));
 				} else {
 					doCycleStep();
 				}
@@ -221,6 +221,7 @@ package com.moxieinteractive.pronto.renderers {
 				_container.addChild(renderer as DisplayObject);
 				_renderers.push(renderer);
 			}
+			_selectedIndex = -1;
 			selectIndex(0);
 			
 			validateProperty(PROP_RENDER);

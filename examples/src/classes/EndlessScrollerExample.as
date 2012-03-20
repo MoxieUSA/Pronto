@@ -85,7 +85,6 @@ package {
 				
 				_lights.push(light);
 			}
-			handler_scroller_beginSelect(); //Turn on initial light
 		}
 		
 		protected function handler_prev_click(evt:MouseEvent):void {
@@ -105,7 +104,7 @@ package {
 		}
 		
 		//Updates the light status indication
-		protected function handler_scroller_beginSelect(evt:EndlessScrollerEvent = null):void {
+		protected function handler_scroller_beginSelect(evt:EndlessScrollerEvent):void {
 			var index:int = _scroller.selectedIndex;
 			var lightsLength:uint = _lights.length;
 			for (var i:uint = 0; i < lightsLength; i++){
