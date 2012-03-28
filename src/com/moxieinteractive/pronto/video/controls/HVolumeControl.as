@@ -11,6 +11,12 @@ package com.moxieinteractive.pronto.video.controls {
 		private static const DEFAULT_DELAY:Number = 1;
 		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		
+		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		override public function get width():Number {
+			return _initialSliderX + (slider.width * 2);
+		}
+		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		
 		public function HVolumeControl(){
 			super();
 		}

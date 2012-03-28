@@ -29,8 +29,7 @@
 		<MVPTimeIndicator/>
 		<!-- <MVPAudioToggle/> -->
 		<!-- <MVPHVolumeSlider/> -->
-		<!-- <MVPVVolumeSlider/> DOES NOT POSITION WELL AT THIS TIME -->
-		<!-- <MVPHVolumeControl/> DOES NOT POSITION WELL AT THIS TIME -->
+		<!-- <MVPHVolumeControl/> -->
 		<MVPVVolumeControl/>
 		<MVPFullscreenToggle/>
 		<MVPFacebookIcon/>
