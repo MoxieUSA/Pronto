@@ -38,11 +38,16 @@ package com.moxieinteractive.pronto.ui.components {
 			super();
 		}
 		
-		override public function init():void {
+		override protected function init():void {
 			super.init();
 			
 			_state = DEFAULT_STATE;
+		}
+		
+		override public function initialize():void {
 			_userInteraction = false;
+			
+			super.initialize();
 		}
 		
 		override public function activate():Boolean {

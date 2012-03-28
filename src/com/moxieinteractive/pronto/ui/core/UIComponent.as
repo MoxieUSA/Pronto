@@ -4,9 +4,6 @@
 package com.moxieinteractive.pronto.ui.core {
 	//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 	import com.moxieinteractive.pronto.ui.api.IUIComponent;
-	
-	import flash.display.MovieClip;
-	import flash.events.Event;
 	//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 	
 	public class UIComponent extends UIMovieClip implements IUIComponent {
@@ -14,29 +11,19 @@ package com.moxieinteractive.pronto.ui.core {
 		private static const DEFAULT_AUTO_ACTIVATE:Boolean = true;
 		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		
-		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		protected var _autoActivate:Boolean;			//Setting autoActivate to true will cause the component to activate/deactivate as soon as it is added/removed from stage
 		protected var _enabled:Boolean;				//Getter/Setter for activate/deactivate
 		
 		protected var _isDynamic:Boolean;
-		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		
-		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		public function get autoActivate():Boolean {
 			return _autoActivate;
 		}
 		public function set autoActivate(value:Boolean):void {
 			_autoActivate = value;
-			if (_autoActivate){
-				if (!stage){
-					addEventListener(Event.ADDED_TO_STAGE, handler_addedToStage);
-				} else {
-					addEventListener(Event.REMOVED_FROM_STAGE, handler_removedFromStage);
-				}
-			} else {
-				removeEventListener(Event.ADDED_TO_STAGE, handler_addedToStage);
-				removeEventListener(Event.REMOVED_FROM_STAGE, handler_removedFromStage);
-			}
 		}
 		
 		override public function get enabled():Boolean {
@@ -56,44 +43,37 @@ package com.moxieinteractive.pronto.ui.core {
 		public function set isDynamic(value:Boolean):void {
 			_isDynamic = value;
 		}
-		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		
 		public function UIComponent(){
 			autoActivate = DEFAULT_AUTO_ACTIVATE;
 			
 			super();
+		}
+		
+		override public function initialize():void {
+			super.initialize();
 			
-			if (_autoActivate && stage){
-				handler_addedToStage();
+			if (_autoActivate){
+				activate();
 			}
 		}
 		
-		override public function init():void {
-			super.init();
-		}
-		
 		override public function destroy():void {
-			deactivate();
+			if (_autoActivate){
+				deactivate();
+			}
 			
 			super.destroy();
 		}
 		
-		protected function handler_addedToStage(evt:Event = null):void {
-			removeEventListener(Event.ADDED_TO_STAGE, handler_addedToStage);
-			addEventListener(Event.REMOVED_FROM_STAGE, handler_removedFromStage);
-			
-			activate();
-		}
-		
-		protected function handler_removedFromStage(evt:Event = null):void {
-			removeEventListener(Event.REMOVED_FROM_STAGE, handler_removedFromStage);
-			addEventListener(Event.ADDED_TO_STAGE, handler_addedToStage);
-			
+		override public function reset():void {
 			destroy();
+			initialize();
 		}
 		
 		public function activate():Boolean {
-			if (_enabled){
+			if (_enabled || !stage){
 				return false;
 			}
 			_enabled = true;
@@ -102,7 +82,7 @@ package com.moxieinteractive.pronto.ui.core {
 		}
 		
 		public function deactivate():Boolean {
-			if (!_enabled){
+			if (!_enabled || !stage){
 				return false;
 			}
 			_enabled = false;

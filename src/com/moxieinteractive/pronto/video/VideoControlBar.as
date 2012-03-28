@@ -22,7 +22,7 @@ package com.moxieinteractive.pronto.video {
 	//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 	
 	//The control layout is designed to maintain control SPACING reguardless of the width
-	public class VideoControlBar extends UIController implements IControlBar, IUIController {
+	public class VideoControlBar extends UIController implements IControlBar {
 		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		private static const PROP_LAYOUT:String = "init_layout";
 		private static const PROP_INIT_LAYOUT:String = "init_init_layout";
@@ -45,6 +45,17 @@ package com.moxieinteractive.pronto.video {
 		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		
 		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		override public function set autoFlow(value:Boolean):void {
+			if (_controls){
+				var controlsLength:uint = _controls.length;
+				for (var i:uint = 0; i < controlsLength; i++){
+					_controls[i].autoFlow = value;
+				}
+			}
+			
+			super.autoFlow = value;
+		}
+		
 		override public function set autoActivate(value:Boolean):void {
 			if (_controls){
 				var controlsLength:uint = _controls.length;
@@ -94,22 +105,27 @@ package com.moxieinteractive.pronto.video {
 			super();
 		}
 		
-		override public function init():void {
+		override protected function init():void {
 			super.init();
 			
-			visible = false;
+			autoFlow = false;
+			autoActivate = true;
 			
 			_isDynamic = true;
-			invalidateProperty(PROP_INIT_LAYOUT);
 		}
 		
-		override public function reset():void {
+		override public function initialize():void {
 			if (_controls){
 				var controlsLength:uint = _controls.length;
 				for (var i:uint = 0; i < controlsLength; i++){
-					_controls[i].reset();
+					_controls[i].initialize();
 				}
 			}
+			hideControls(0, 0);
+			
+			super.initialize()
+			
+			invalidateProperty(PROP_INIT_LAYOUT);
 		}
 		
 		override public function destroy():void {
@@ -126,7 +142,7 @@ package com.moxieinteractive.pronto.video {
 		override public function activate():Boolean {
 			if (!super.activate()){
 				return false;
-			}			
+			}
 			if (_controls){
 				var controlsLength:uint = _controls.length;
 				for (var i:uint = 0; i < controlsLength; i++){
@@ -160,12 +176,10 @@ package com.moxieinteractive.pronto.video {
 			if (_controls){
 				var controlsLength:uint = _controls.length;
 				for (var i:uint = 0; i < controlsLength; i++){
-					if (_controls.controlled != controlled){
-						_controls.controlled = controlled;
-					}
+					_controls[i].issueControl(_controlled);
 				}
 			}
-			controlled.addEventListener(VideoEvent.SIZE_SCALE, handler_layout);
+			_controlled.addEventListener(VideoEvent.SIZE_SCALE, handler_layout);
 			
 			return true;
 		}
@@ -180,7 +194,8 @@ package com.moxieinteractive.pronto.video {
 					_controls[i].revokeControl();
 				}
 			}
-			controlled.removeEventListener(VideoEvent.SIZE_SCALE, handler_layout);
+			_controlled.removeEventListener(VideoEvent.SIZE_SCALE, handler_layout);
+			_controlled = null;
 			
 			return true;
 		}
@@ -286,11 +301,12 @@ package com.moxieinteractive.pronto.video {
 					layout.xFromRight = bg.width - (child.x + child.width);
 					if (child is IUIComponent){
 						var component:IUIComponent = child as IUIComponent;
-						component.autoActivate = autoActivate;
+						component.autoFlow = _autoFlow;
+						component.autoActivate = _autoActivate;
 						if (component is IUIController){
 							var controller:IUIController = component as IUIController;
-							if (controller.controlled != controlled){
-								controller.controlled = controlled;
+							if (controller.controlled != _controlled){
+								controller.controlled = _controlled;
 							}
 							_controls.push(controller);
 						}
@@ -341,7 +357,7 @@ package com.moxieinteractive.pronto.video {
 			if (_autoSpaceControls){
 				autoSpace();
 			}
-			visible = true;
+			showControls();
 			
 			validateProperty(PROP_LAYOUT);
 		}

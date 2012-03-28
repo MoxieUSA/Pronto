@@ -9,7 +9,6 @@ package com.moxieinteractive.pronto.ui.components {
 	import com.greensock.TweenLite;
 	
 	import flash.display.MovieClip;
-	import flash.utils.getDefinitionByName;
 	import flash.events.MouseEvent;
 	import flash.events.Event;
 	//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -129,15 +128,20 @@ package com.moxieinteractive.pronto.ui.components {
 			super();
 		}
 		
-		override public function init():void {
+		override protected function init():void {
 			super.init();
 			
 			timing = DEFAULT_TIMING;
 			
 			_isDynamic = true;
+		}
+		
+		override public function initialize():void {
 			_scale = 0;
 			_isDragging = false;
 			_userInteraction = false;
+			
+			super.initialize();
 		}
 		
 		override public function destroy():void {

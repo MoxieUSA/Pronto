@@ -40,7 +40,7 @@ package com.moxieinteractive.pronto.views {
 		}
 		
 		//Called once from the constructor
-		override public function init():void {
+		override protected function init():void {
 			if (traceFlow){
 				trace ("View::init: " + this);
 			}
@@ -52,32 +52,13 @@ package com.moxieinteractive.pronto.views {
 			}
 		}
 		
-		override protected function handler_addedToStage(evt:Event = null):void {
-			if (traceFlow){
-				trace ("View::handler_addedToStage: " + this);
-			}
-			removeEventListener(Event.ADDED_TO_STAGE, handler_addedToStage);
-			addEventListener(Event.REMOVED_FROM_STAGE, handler_removedFromStage);
-			
-			initialize();
-		}
-		
-		override protected function handler_removedFromStage(evt:Event = null):void {
-			if (traceFlow){
-				trace ("View::handler_removedFromStage: " + this);
-			}
-			removeEventListener(Event.REMOVED_FROM_STAGE, handler_removedFromStage);
-			addEventListener(Event.ADDED_TO_STAGE, handler_addedToStage);
-			
-			destroy();
-		}
-		
-		//Called from addedToStage (if _autoActivate is false then this will need to be called manually)
-		public function initialize():void {
+		override public function initialize():void {
 			if (traceFlow){
 				trace ("View::initialize: " + this);
 			}
-			super.init(); //Reinitialize base classes from a destroy
+			if (!_invalidatedProps){
+				_invalidatedProps = new Array();
+			}
 			
 			alpha = 0;
 			visible = false;
@@ -112,7 +93,9 @@ package com.moxieinteractive.pronto.views {
 				stop();
 			}
 			
-			activate();
+			if (_autoActivate){
+				activate();
+			}
 		}
 		
 		override public function activate():Boolean {
@@ -130,7 +113,9 @@ package com.moxieinteractive.pronto.views {
 			if (traceFlow){
 				trace ("View::transitionOut: " + this);
 			}
-			deactivate();
+			if (_autoActivate){
+				deactivate();
+			}
 			
 			if (_timelineTransitions){
 				ObjUtil.addFrameScript(this, LABEL_OUT_COMPLETE, transitionOutComplete);
@@ -165,7 +150,7 @@ package com.moxieinteractive.pronto.views {
 			if (parent){
 				removeEventListener(Event.REMOVED_FROM_STAGE, handler_removedFromStage);
 				parent.removeChild(this);
-				if (_autoActivate){
+				if (_autoFlow){
 					addEventListener(Event.ADDED_TO_STAGE, handler_addedToStage);
 				}
 			}
@@ -192,8 +177,7 @@ package com.moxieinteractive.pronto.views {
 			if (traceFlow){
 				trace ("View::reset: " + this);
 			}
-			destroy();
-			initialize();
+			super.reset();
 		}
 	}
 }

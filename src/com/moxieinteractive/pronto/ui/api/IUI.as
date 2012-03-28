@@ -3,7 +3,10 @@
 */
 package com.moxieinteractive.pronto.ui.api {
 	public interface IUI {
-		function init():void;
+		function get autoFlow():Boolean;
+		function set autoFlow(value:Boolean):void;
+		
+		function initialize():void;
 		function destroy():void;
 		function reset():void;
 	}

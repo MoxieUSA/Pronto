@@ -18,6 +18,11 @@ package com.moxieinteractive.pronto.video {
 	//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 	
 	public class MoxieVideoPlayer extends UIComponent implements IVideoPlayer {
+		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		private static const PROP_AUTO_HIDE_CONTROLS:String = "auto_hide_controls";
+		private static const PROP_AUTO_SIZE:String = "auto_size";
+		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		
 		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		public var controlBarMask:MovieClip;
 		public var controlBar:VideoControlBar;
@@ -36,6 +41,7 @@ package com.moxieinteractive.pronto.video {
 		}
 		override public function set width(value:Number):void {
 			videoScreen.width = value;
+			invalidateProperty(PROP_AUTO_SIZE);
 		}
 		
 		override public function get height():Number {
@@ -43,6 +49,7 @@ package com.moxieinteractive.pronto.video {
 		}
 		override public function set height(value:Number):void {
 			videoScreen.height = value;
+			invalidateProperty(PROP_AUTO_SIZE);
 		}
 		
 		[Inspectable (name="autoHideControls", variable="autoHideControls", type="Boolean", defaultValue="true")]
@@ -51,7 +58,7 @@ package com.moxieinteractive.pronto.video {
 		}
 		public function set autoHideControls(value:Boolean):void {
 			_autoHideControls = value;
-			initAutoHideControls();
+			invalidateProperty(PROP_AUTO_HIDE_CONTROLS);
 		}
 		
 		[Inspectable (name="controlsHideTime", variable="controlsHideTime", type="Number", defaultValue="2")]
@@ -177,32 +184,28 @@ package com.moxieinteractive.pronto.video {
 			controlBar.mask = controlBarMask;
 		}
 		
-		override public function init():void {
-			super.init();
-			
+		override public function initialize():void {
 			_timer = new NormalTimer();
 			_currentTime = 0;
 			
-			initAutoHideControls();
-			autoSize();
+			controlBar.initialize();
+			videoScreen.initialize();
+			
+			super.initialize();
+			
+			invalidateProperty(PROP_AUTO_SIZE);
+			invalidateProperty(PROP_AUTO_HIDE_CONTROLS);
 		}
 		
 		override public function destroy():void {
 			removeEventListener(Event.ENTER_FRAME, handler_enterFrame);
 			
+			controlBar.destroy();
+			videoScreen.destroy();
+			
 			super.destroy();
 			
 			_timer = null;
-		}
-		
-		override public function reset():void {
-			destroy();
-			controlBar.destroy();
-			videoScreen.destroy();
-		
-			controlBar.init();
-			videoScreen.init();
-			init();
 		}
 		
 		override public function activate():Boolean {
@@ -309,21 +312,25 @@ package com.moxieinteractive.pronto.video {
 			controlBar.layoutControls();
 		}
 		
-		public function initAutoHideControls():void {
-			if (_autoHideControls){
-				_timer.tick();
-				addEventListener(Event.ENTER_FRAME, handler_enterFrame);
-			} else {
-				removeEventListener(Event.ENTER_FRAME, handler_enterFrame);
-			}
-		}
-		
 		public function autoSize():void {
 			videoScreen.width = videoScreen.width * scaleX;
 			videoScreen.height = videoScreen.height * scaleY;
 			
 			scaleX = 1;
 			scaleY = 1;
+			
+			validateProperty(PROP_AUTO_SIZE);
+		}
+		
+		protected function initAutoHideControls():void {
+			if (_autoHideControls){
+				_timer.tick();
+				addEventListener(Event.ENTER_FRAME, handler_enterFrame);
+			} else {
+				removeEventListener(Event.ENTER_FRAME, handler_enterFrame);
+			}
+			
+			validateProperty(PROP_AUTO_HIDE_CONTROLS);
 		}
 		
 		protected function handler_enterFrame(evt:Event):void {
@@ -362,6 +369,15 @@ package com.moxieinteractive.pronto.video {
 			}
 			
 			return false;
+		}
+		
+		override protected function commitProperties():void {
+			if (!isPropertyValid(PROP_AUTO_SIZE)){
+				autoSize();
+			}
+			if (!isPropertyValid(PROP_AUTO_HIDE_CONTROLS)){
+				initAutoHideControls();
+			}
 		}
 	}
 }

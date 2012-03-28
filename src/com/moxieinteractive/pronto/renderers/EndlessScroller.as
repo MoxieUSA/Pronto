@@ -120,14 +120,14 @@ package com.moxieinteractive.pronto.renderers {
 			}
 		}
 		
-		override public function init():void {
-			super.init();
-			
+		override public function initialize():void {
 			_selectedIndex = 0;
 			_container = new MovieClip();
 			addChild(_container);
 			
 			_renderers = new Array();
+			
+			super.initialize();
 		}
 		
 		override public function destroy():void {

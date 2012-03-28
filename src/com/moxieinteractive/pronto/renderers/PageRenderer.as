@@ -116,10 +116,10 @@ package com.moxieinteractive.pronto.renderers {
 			super();
 		}
 		
-		override public function init():void {
-			super.init();
-			
+		override public function initialize():void {
 			_renderers = new Array();
+			
+			super.initialize();
 		}
 		
 		override public function destroy():void {

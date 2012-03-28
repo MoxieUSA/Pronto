@@ -45,10 +45,14 @@ package com.moxieinteractive.pronto.renderers.core {
 		}
 		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		
-		override public function init():void {
+		override protected function init():void {
 			super.init();
 			
 			_data = defaultData;
+		}
+		
+		override public function initialize():void {
+			super.initialize();
 		}
 		
 		override public function destroy():void {

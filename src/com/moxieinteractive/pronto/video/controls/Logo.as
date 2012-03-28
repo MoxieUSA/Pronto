@@ -4,6 +4,7 @@
 package com.moxieinteractive.pronto.video.controls {
 	//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 	import com.moxieinteractive.pronto.ui.components.ClickThroughComponent;
+	import com.moxieinteractive.pronto.ui.api.IUIControllable;
 	import com.moxieinteractive.pronto.events.VideoControlEvent;
 	
 	import flash.display.Loader;
@@ -41,12 +42,12 @@ package com.moxieinteractive.pronto.video.controls {
 			super();
 		}
 		
-		override public function init():void {
-			super.init();
-			
+		override public function initialize():void {
 			_loader = new Loader();
 			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, handler_loader_complete);
 			_loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, handler_loader_error);
+			
+			super.initialize();
 		}
 		
 		override public function destroy():void {
@@ -57,6 +58,23 @@ package com.moxieinteractive.pronto.video.controls {
 			_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, handler_loader_complete);
 			_loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, handler_loader_error);
 			_loader = null;
+		}
+		
+		override public function issueControl(controlled:IUIControllable):Boolean {
+			if (!super.issueControl(controlled)){
+				return false;
+			}
+			
+			return true;
+		}
+		
+		override public function revokeControl():Boolean {
+			if (!super.revokeControl()){
+				return false;
+			}
+			_controlled = null;
+			
+			return true;
 		}
 		
 		protected function removeImage():void {

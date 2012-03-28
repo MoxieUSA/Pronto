@@ -22,7 +22,7 @@ package views {
 		}
 		
 		//This method only gets called once from the constructor
-		override public function init():void {
+		override protected function init():void {
 			super.init();
 		}
 		

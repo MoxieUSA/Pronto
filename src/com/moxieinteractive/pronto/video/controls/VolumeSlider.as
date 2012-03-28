@@ -18,9 +18,12 @@ package com.moxieinteractive.pronto.video.controls {
 			super(renderDirection, inverted);
 		}
 		
-		override public function init():void {
+		override protected function init():void {
 			super.init();
 			
+			if (parent is VolumeControl){
+				autoFlow = false;
+			}
 			isDynamic = false;
 		}
 		

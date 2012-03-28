@@ -37,7 +37,6 @@ package com.moxieinteractive.pronto.views {
 		public function init():void {
 			_views = new Array();
 			_displayList = new Array();
-			
 			_displayListIndex = -1;
 		}
 		

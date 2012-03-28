@@ -10,15 +10,51 @@ package com.moxieinteractive.pronto.ui.core {
 	//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 	
 	public class UIMovieClip extends MovieClip implements IUI {
+		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		private static const DEFAULT_AUTO_FLOW:Boolean = true;
+		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		
 		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		protected var _invalidatedProps:Array;		//Array containing string values of properties that have been invalidated
+		protected var _autoFlow:Boolean;
 		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		
+		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		public function get autoFlow():Boolean {
+			return _autoFlow;
+		}
+		public function set autoFlow(value:Boolean):void {
+			_autoFlow = value;
+			if (_autoFlow){
+				if (!stage){
+					addEventListener(Event.ADDED_TO_STAGE, handler_addedToStage, false, 1, true);
+				} else {
+					addEventListener(Event.REMOVED_FROM_STAGE, handler_removedFromStage, false, 1, true);
+				}
+			} else {
+				removeEventListener(Event.ADDED_TO_STAGE, handler_addedToStage);
+				removeEventListener(Event.REMOVED_FROM_STAGE, handler_removedFromStage);
+			}
+		}
+		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		
 		public function UIMovieClip(){
+			autoFlow = DEFAULT_AUTO_FLOW;
+			
 			init();
+			
+			if (_autoFlow && stage){
+				handler_addedToStage();
+			}
 		}
 		
-		public function init():void {
+		protected function init():void {
+			if (!_invalidatedProps){
+				_invalidatedProps = new Array();
+			}
+		}
+		
+		public function initialize():void {
 			if (!_invalidatedProps){
 				_invalidatedProps = new Array();
 			}
@@ -30,7 +66,21 @@ package com.moxieinteractive.pronto.ui.core {
 		
 		public function reset():void {
 			destroy();
-			init();
+			initialize();
+		}
+		
+		protected function handler_addedToStage(evt:Event = null):void {
+			removeEventListener(Event.ADDED_TO_STAGE, handler_addedToStage);
+			addEventListener(Event.REMOVED_FROM_STAGE, handler_removedFromStage);
+			
+			initialize();
+		}
+		
+		protected function handler_removedFromStage(evt:Event = null):void {
+			removeEventListener(Event.REMOVED_FROM_STAGE, handler_removedFromStage);
+			addEventListener(Event.ADDED_TO_STAGE, handler_addedToStage);
+			
+			destroy();
 		}
 		
 		protected function invalidateProperty(prop:String):void {

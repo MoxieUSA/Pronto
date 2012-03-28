@@ -197,9 +197,22 @@ package com.moxieinteractive.pronto.video {
 			super();
 		}
 		
-		override public function init():void {
+		override protected function init():void {
 			super.init();
 			
+			if (parent is MoxieVideoPlayer){
+				autoFlow = false;
+			}
+			_lastWidth = super.width;
+			_lastHeight = super.height;
+			_width = _lastWidth;
+			_height = _lastHeight;
+			
+			mouseChildren = false;
+			doubleClickEnabled = true;
+		}
+		
+		override public function initialize():void {
 			if (!container){
 				container = new MovieClip();
 				addChild(container);
@@ -207,19 +220,11 @@ package com.moxieinteractive.pronto.video {
 			bg = container.bg;
 			buffering = container.buffering;
 			
-			_lastWidth = super.width;
-			_lastHeight = super.height;
-			_width = _lastWidth;
-			_height = _lastHeight;
-			
 			_isFullscreen = false;
 			_volume = 1;
 			_playheadPercent = 0;
 			_intervalDivisions = 0;
 			_asCuePoints = new Array();
-			
-			mouseChildren = false;
-			doubleClickEnabled = true;
 			
 			_connection = new NetConnection();
 			_connection.addEventListener(NetStatusEvent.NET_STATUS, handler_netStatus, false, 1, true);
@@ -235,16 +240,24 @@ package com.moxieinteractive.pronto.video {
 				buffering.visible = false; //Hide buffering initially
 			}
 			
-			addEventListener(Event.ADDED_TO_STAGE, handler_addedToStage, false, 1, true);
+			if (stage){
+				stage.addEventListener(FullScreenEvent.FULL_SCREEN, handler_fullScreen, false, 1, true);
+			}
 			addEventListener(Event.ENTER_FRAME, handler_enterFrame, false, 1, true);
+			
+			super.initialize();
 		}
 		
 		override public function destroy():void {
-			removeEventListener(Event.ENTER_FRAME, handler_enterFrame);
-			removeEventListener(Event.ADDED_TO_STAGE, handler_addedToStage);
 			if (stage){
 				stage.removeEventListener(FullScreenEvent.FULL_SCREEN, handler_fullScreen);
 			}
+			removeEventListener(Event.ENTER_FRAME, handler_enterFrame);
+			
+			super.destroy();
+			
+			bg = null;
+			buffering = null;
 			
 			_metaData = null;
 			clearASCuePoints();
@@ -262,14 +275,6 @@ package com.moxieinteractive.pronto.video {
 			container.removeChild(_video);
 			_video.clear();
 			_video = null;
-			
-			super.destroy();
-		}
-		
-		public function handler_addedToStage(evt:Event):void {
-			removeEventListener(Event.ADDED_TO_STAGE, handler_addedToStage);
-			
-			stage.addEventListener(FullScreenEvent.FULL_SCREEN, handler_fullScreen, false, 1, true);
 		}
 		
 		public function setSource(src:String):void {
@@ -638,8 +643,10 @@ package com.moxieinteractive.pronto.video {
 		}
 		
 		public function clearASCuePoints():void {
-			while (_asCuePoints.length){
-				_asCuePoints.shift();
+			if (_asCuePoints){
+				while (_asCuePoints.length){
+					_asCuePoints.shift();
+				}
 			}
 		}
 		
@@ -813,11 +820,11 @@ package com.moxieinteractive.pronto.video {
 		}
 		
 		override protected function commitProperties():void {
-			if (!isPropertyValid(PROP_STOP)){ 				//trace (PROP_STOP);
-				doStop();
-			}
 			if (!isPropertyValid(PROP_SOURCE)){ 			//trace (PROP_SOURCE);
 				doSource();
+			}
+			if (!isPropertyValid(PROP_STOP)){ 				//trace (PROP_STOP);
+				doStop();
 			}
 			if (!isPropertyValid(PROP_SIZESCALE)){ 			//trace (PROP_SIZESCALE);
 				doSizeScale();

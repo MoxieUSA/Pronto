@@ -38,6 +38,14 @@ package com.moxieinteractive.pronto.video.controls {
 			super();
 		}
 		
+		override protected function init():void {
+			super.init();
+			
+			if (parent is VolumeControl){
+				autoFlow = false;
+			}
+		}
+		
 		override public function render():void {
 			if (_state){
 				gotoAndStop(LABEL_MUTED);

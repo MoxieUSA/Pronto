@@ -25,7 +25,29 @@ package com.moxieinteractive.pronto.video.controls {
 		protected var _tween:TweenLite;
 		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		
-		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		override public function set autoFlow(value:Boolean):void {
+			if (toggle){
+				toggle.autoFlow = value;
+			}
+			if (slider){
+				slider.autoFlow = value;
+			}
+			
+			super.autoFlow = value;
+		}
+		
+		override public function set autoActivate(value:Boolean):void {
+			if (toggle){
+				toggle.autoActivate = value;
+			}
+			if (slider){
+				slider.autoActivate = value;
+			}
+			
+			super.autoActivate = value;
+		}
+		
 		override public function get width():Number {
 			return toggle.width;
 		}
@@ -33,16 +55,30 @@ package com.moxieinteractive.pronto.video.controls {
 		override public function get height():Number {
 			return toggle.height;
 		}
-		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		
 		public function VolumeControl(){
 			super();
 		}
 		
-		override public function init():void {
+		override protected function init():void {
 			super.init();
 			
 			timing = DEFAULT_TIMING;
+		}
+		
+		override public function initialize():void {
+			toggle.initialize();
+			slider.initialize();
+			
+			super.initialize();
+		}
+		
+		override public function destroy():void {
+			super.destroy();
+			
+			toggle.destroy();
+			slider.destroy();
 		}
 		
 		override public function activate():Boolean {
