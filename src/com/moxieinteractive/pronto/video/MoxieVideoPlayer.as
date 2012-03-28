@@ -348,7 +348,11 @@ package com.moxieinteractive.pronto.video {
 			var mousePosition:Point = localToGlobal(new Point(mouseX, mouseY));
 			if (_lastMousePosition){
 				if (mousePosition.x == _lastMousePosition.x && mousePosition.y == _lastMousePosition.y){
-					return false;
+					if (controlBar.hitTestPoint(mousePosition.x, mousePosition.y, true)){
+						return true;
+					} else {
+						return false;
+					}
 				}
 			}
 			_lastMousePosition = mousePosition;
