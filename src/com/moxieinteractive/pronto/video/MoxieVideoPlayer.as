@@ -315,7 +315,6 @@ package com.moxieinteractive.pronto.video {
 		public function autoSize():void {
 			videoScreen.width = videoScreen.width * scaleX;
 			videoScreen.height = videoScreen.height * scaleY;
-			
 			scaleX = 1;
 			scaleY = 1;
 			

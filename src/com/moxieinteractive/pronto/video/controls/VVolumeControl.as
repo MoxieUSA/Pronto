@@ -18,13 +18,13 @@ package com.moxieinteractive.pronto.video.controls {
 		override public function openSlider():void {
 			super.openSlider();
 			
-			_tween = new TweenLite(slider, timing, {y:-slider.height});
+			_tween = new TweenLite(slider, timing, {y:_initialSliderY - slider.height});
 		}
 		
 		override public function closeSlider():void {
 			super.closeSlider();
 			
-			_tween = new TweenLite(slider, timing, {y:0, delay:DEFAULT_DELAY});
+			_tween = new TweenLite(slider, timing, {y:_initialSliderY, delay:DEFAULT_DELAY});
 		}
 	}
 }

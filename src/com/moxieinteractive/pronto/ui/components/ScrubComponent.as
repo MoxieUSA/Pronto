@@ -131,9 +131,11 @@ package com.moxieinteractive.pronto.ui.components {
 		override protected function init():void {
 			super.init();
 			
+			_isDynamic = true;
+			
 			timing = DEFAULT_TIMING;
 			
-			_isDynamic = true;
+			autoSize();
 		}
 		
 		override public function initialize():void {
@@ -195,6 +197,16 @@ package com.moxieinteractive.pronto.ui.components {
 			}
 			
 			positionThumb(_scale);
+		}
+		
+		public function autoSize():void {
+			if (_renderDirection == RENDER_HORIZONTAL){
+				width = width * scaleX;
+				scaleX = 1;
+			} else if (_renderDirection == RENDER_VERTICAL){
+				height = height * scaleX;
+				scaleY = 1;
+			}
 		}
 		
 		override protected function commitProperties():void {

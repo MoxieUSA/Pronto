@@ -16,14 +16,16 @@ package com.moxieinteractive.pronto.video.controls {
 		private static const DEFAULT_TIMING:Number = 0.5;
 		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		
-		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		public var toggle:AudioToggle;
 		public var slider:VolumeSlider;
 		
 		public var timing:Number;
 		
+		protected var _initialSliderX:Number;
+		protected var _initialSliderY:Number;
 		protected var _tween:TweenLite;
-		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		
 		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		override public function set autoFlow(value:Boolean):void {
@@ -65,6 +67,9 @@ package com.moxieinteractive.pronto.video.controls {
 			super.init();
 			
 			timing = DEFAULT_TIMING;
+			
+			_initialSliderX = slider.x;
+			_initialSliderY = slider.y;
 		}
 		
 		override public function initialize():void {
