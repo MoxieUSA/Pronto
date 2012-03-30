@@ -13,6 +13,8 @@
 	<autoClear>true</autoClear>						<!-- Determines whether the video should clear upon completion ("true", "false") -->
 	<bufferTime>3</bufferTime>						<!-- The amount of time to buffer (Number in seconds) -->
 	<scaleMode>exactFit</scaleMode>					<!-- The scale mode of the video player ("noScale", "exactFit", "maintainAspectRatio") -->
+	<deblocking>0</deblocking>						<!-- The deblocking mode to use. See flash.media.Video for modes -->
+	<smoothing>false</smoothing>					<!-- Determines whether to smooth the video -->
 	<!-- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -->
 	
 	<!-- All Controls are OPTIONAL -->

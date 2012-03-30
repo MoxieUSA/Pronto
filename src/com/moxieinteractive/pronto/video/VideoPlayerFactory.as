@@ -46,6 +46,12 @@ package com.moxieinteractive.pronto.video {
 			if (fromXML.scaleMode){
 				videoPlayer.scaleMode = fromXML.scaleMode.toString();
 			}
+			if (fromXML.deblocking){
+				videoPlayer.deblocking = uint(fromXML.deblocking);
+			}
+			if (fromXML.smoothing){
+				videoPlayer.smoothing = fromXML.smoothing.toString() == "true";
+			}
 			if (fromXML.controls){
 				for each (var control:XML in fromXML.controls.elements()){
 					var controlName:String = control.name().toString();

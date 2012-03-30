@@ -23,6 +23,10 @@ package com.moxieinteractive.pronto.video.api {
 		function get isBuffering():Boolean;
 		function get bufferTime():Number;
 		function set bufferTime(value:Number):void;
+		function get deblocking():uint;
+		function set deblocking(value:uint):void;
+		function get smoothing():Boolean;
+		function set smoothing(value:Boolean):void;
 		
 		function setSource(src:String):void;
 		function setSize(w:Number, h:Number):void;

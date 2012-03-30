@@ -37,6 +37,7 @@ package com.moxieinteractive.pronto.video {
 		protected static const PROP_VOLUME:String = "volume";
 		protected static const PROP_SEEK:String = "seek";
 		protected static const PROP_BUFFER_TIME:String = "buffertime";
+		protected static const PROP_QUALITY:String = "quality";
 		protected static const PROP_CUE_POINTS:String = "cue_points";
 		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		
@@ -67,6 +68,8 @@ package com.moxieinteractive.pronto.video {
 		protected var _isMuted:Boolean;
 		protected var _isFullscreen:Boolean;
 		protected var _bufferTime:Number = 3;
+		protected var _deblocking:uint;
+		protected var _smoothing:Boolean;
 		protected var _lastWidth:Number;
 		protected var _lastHeight:Number;
 		protected var _intervalDivisions:uint;
@@ -186,6 +189,22 @@ package com.moxieinteractive.pronto.video {
 		public function set bufferTime(value:Number):void {
 			_bufferTime = value;
 			invalidateProperty(PROP_BUFFER_TIME);
+		}
+		
+		public function get deblocking():uint {
+			return _deblocking;
+		}
+		public function set deblocking(value:uint):void {
+			_deblocking = Math.max(Math.min(value, 5), 0);
+			invalidateProperty(PROP_QUALITY);
+		}
+		
+		public function get smoothing():Boolean {
+			return _smoothing;
+		}
+		public function set smoothing(value:Boolean):void {
+			_smoothing = value;
+			invalidateProperty(PROP_QUALITY);
 		}
 		
 		public function get metaData():MetaDataVO {
@@ -819,6 +838,25 @@ package com.moxieinteractive.pronto.video {
 			validateNow();
 		}
 		
+		protected function doBufferTime():void {
+			if (!_stream){
+				return;
+			}
+			_stream.bufferTime = _bufferTime;
+			
+			validateProperty(PROP_BUFFER_TIME);
+		}
+		
+		protected function doQuality():void {
+			if (!_video){
+				return;
+			}
+			_video.deblocking = _deblocking;
+			_video.smoothing = _smoothing;
+			
+			validateProperty(PROP_QUALITY);
+		}
+		
 		override protected function commitProperties():void {
 			if (!isPropertyValid(PROP_SOURCE)){ 			//trace (PROP_SOURCE);
 				doSource();
@@ -847,22 +885,16 @@ package com.moxieinteractive.pronto.video {
 			if (!isPropertyValid(PROP_BUFFER_TIME)){ 		//trace (PROP_BUFFER_TIME);
 				doBufferTime();
 			}
+			if (!isPropertyValid(PROP_QUALITY)){			//trace (PROP_QUALITY);
+				doQuality();
+			}
 			if (!isPropertyValid(PROP_CUE_POINTS)){			//trace (PROP_CUE_POINTS);
 				doInitASCuePoints();
 			}
 		}
 		
-		protected function doBufferTime():void {
-			if (!_stream){
-				return;
-			}
-			_stream.bufferTime = _bufferTime;
-			
-			validateProperty(PROP_BUFFER_TIME);
-		}
-		
 		//Required for NetConnection/NetStream clients
-		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 		public function onBWDone():void {
 			//trace ("VideoScreen::onBWDone");
 		}
@@ -913,6 +945,6 @@ package com.moxieinteractive.pronto.video {
 			
 			dispatchEvent(new VideoEvent(VideoEvent.CUE_POINT, cuePoint));
 		}
-		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 	}
 }

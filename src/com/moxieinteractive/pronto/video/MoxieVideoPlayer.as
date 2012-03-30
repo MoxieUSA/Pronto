@@ -125,6 +125,22 @@ package com.moxieinteractive.pronto.video {
 			videoScreen.bufferTime = value;
 		}
 		
+		[Inspectable (name="deblocking", variable="deblocking", type="uint", defaultValue="0")]
+		public function get deblocking():uint {
+			return videoScreen.deblocking;
+		}
+		public function set deblocking(value:uint):void {
+			videoScreen.deblocking = value;
+		}
+		
+		[Inspectable (name="smoothing", variable="smoothing", type="Boolean", defaultValue="false")]
+		public function get smoothing():Boolean {
+			return videoScreen.smoothing;
+		}
+		public function set smoothing(value:Boolean):void {
+			videoScreen.smoothing = value;
+		}
+		
 		public function get volume():Number {
 			return videoScreen.volume;
 		}

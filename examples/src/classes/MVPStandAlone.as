@@ -106,6 +106,10 @@ package {
 			ExternalInterface.addCallback("setAutoClear", setAutoClear);
 			ExternalInterface.addCallback("getBufferTime", getBufferTime);
 			ExternalInterface.addCallback("setBufferTime", setBufferTime);
+			ExternalInterface.addCallback("getDeblocking", getDeblocking);
+			ExternalInterface.addCallback("setDeblocking", setDeblocking);
+			ExternalInterface.addCallback("getSmoothing", getSmoothing);
+			ExternalInterface.addCallback("setSmoothing", setSmoothing);
 			ExternalInterface.addCallback("getCurrentTime", getCurrentTime);
 			ExternalInterface.addCallback("getTotalTime", getTotalTime);
 			ExternalInterface.addCallback("getIsPlayingBack", getIsPlayingBack);
@@ -201,6 +205,20 @@ package {
 		}
 		protected function setBufferTime(value:Number):void {
 			_videoPlayer.bufferTime = value;
+		}
+		
+		protected function getDeblocking():uint {
+			return _videoPlayer.deblocking;
+		}
+		protected function setDeblocking(value:uint):void {
+			_videoPlayer.deblocking = value;
+		}
+		
+		protected function getSmoothing():Boolean {
+			return _videoPlayer.smoothing;
+		}
+		protected function setSmoothing(value:Boolean):void {
+			_videoPlayer.smoothing = value;
 		}
 		
 		protected function getVolume():Number {
